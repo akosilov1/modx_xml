@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="media/script/mootools/mootools.js" ></script>
+    <script type="text/javascript" src="media/script/mootools/moodx.js"></script>
+    <script type="text/javascript" src="media/script/tabpane.js"></script>
+    <link rel="stylesheet" type="text/css" href="media/style/default/style.css">
+    <link rel="stylesheet" type="text/css" href="../assets/modules/xls/styles.css">
+</head>
+<body>
+<div class="sectionBody">
+    <p></p>
+    <div class="tab-pane" id="tabPanel">
+        <a href="{{m_link}}">Обновить станицу</a>
+        <script type="text/javascript">
+            mypanel = new WebFXTabPane(document.getElementById("tabPanel"), true);
+            moduleLink = "{{m_link}}";
+        </script>
+        <div class="tab-page" id="startTab">
+            <h2 class="tab">Импорт</h2>
+            <script>mypanel.addTabPage(document.getElementById("startTab"));</script>
+            <h3>Импорт (Загрузка)</h3>
+            <div>
+                <form action="{{m_link}}" method="post" enctype="multipart/form-data">
+                    <label for="">Пропуск строк<input type="text" name="skipp" required value="{{skipp}}"/></label>
+                    <label for="">Родитель<input type="text" name="parent" required value="{{parent}}"/></label>
+                    <label for="">Шаблон<input type="text" name="template" value="{{template}}"/></label>
+                    <br>
+                    <fieldset>
+                        <legend>Выбор файла для импорта</legend>
+                        <div id="file-list">
+                        {{files}}
+                        </div>
+                        <input type="file" name="file" accept=".xls,.xlsx"/>
+                        <button name="action" value="add_file">+ Добавить файл +</button>
+                        <button name="action" value="del_file">- Удалить файл -</button>
+                    </fieldset>
+                    <br>
+                    <button name="action" value="upload">Загрузить</button><br>
+                    <hr>
+                    <h3>Обновление</h3>
+                    <label for="index">Поле для идентификации
+                    <select id="index" name="index">
+                        {{index}}
+                    </select></label>
+                    <button name="action" value="update">Обновить</button>
+                    <hr>
+                {{table}}
+                </form>
+            </div>
+        </div>
+        <div class="tab-page" id="clearTab">
+            <h2 class="tab">Очистка</h2>
+            <script>mypanel.addTabPage(document.getElementById("clearTab"));</script>
+            <div>
+                <form action="{{m_link}}" method="post">
+                    <label for="">Родитель <input type="text" name="parent"></label>
+                    <button name="action" value="clear">Очистить</button>
+                </form>
+            </div>
+        </div>
+        <div class="tab-page" id="settingsTab">
+            <h2 class="tab">Настройки</h2>
+            <script>mypanel.addTabPage(document.getElementById("settingsTab"));</script>
+            <div>
+                <form action="{{m_link}}" method="post">
+                    <textarea name="mod-settings" id="" cols="30" rows="10">{{settings}}</textarea>
+                    <button name="action" value="settings-save">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/modules/xls/script.js"></script>
+</body>
+</html>

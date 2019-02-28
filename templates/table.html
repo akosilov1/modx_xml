@@ -1,0 +1,22 @@
+<th id='col_{{col}}'>
+    <select name='col_[{{col}}]'>
+    	<option value=''> --- </option>
+    	{{options}}
+    </select>
+    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+    <div class='dop_settings'>
+    	<h3>Настроики для солбца {{col}}</h3>
+    	<i class="fa fa-times-circle-o" aria-hidden="true"></i>
+    	<div class='dop_settings_body'>
+    		<p>Действие</p>
+    		<select name="action_cols[{{col}}]" id="">
+    			<option value="">---</option>
+    			<option value="prefix">Добавить в начало</option>
+    			<option value="postfix">Добавить в конец</option>
+    			<option value="replace">Заменить</option>
+    		</select>
+    		<p>Данные</p>
+    		<input type="text" name="set_cols[{{col}}]" />
+    	</div>
+    </div>
+</th>  

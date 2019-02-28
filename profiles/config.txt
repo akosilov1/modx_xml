@@ -1,0 +1,1 @@
+{"col":["pagetitle","longtitle","desc","keyw"],"parent":1,"template":3,"skipp":1,"index":"pagetitle","file":"example2.xlsx","action_cols":["prefix","","",""],"set_cols":["111","","",""]}

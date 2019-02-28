@@ -1,0 +1,47 @@
+table{
+    border-collapse: collapse;
+}
+table td{
+    border: 1px solid #333;
+    padding: 5px;
+}
+.dop_settings{
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    width: 500px;
+    height: 400px;
+    margin-left: -200px;
+    background: #fff;
+    border: 3px solid #999;
+    border-radius: 20px;
+    z-index: 100;
+    overflow: hidden;
+    box-shadow: 4px 10px 25px rgba(0,0,0,0.5);
+}
+.dop_settings.active{
+    display: block;
+}
+.dop_settings > i{
+    font-size: 24px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+.dop_settings h3{
+    line-height: 44px;
+    padding: 0 10px;
+    text-align: center;
+    border-bottom: 2px solid #999;
+    background: #e2e2e2;
+    color: #000;
+    font-weight: 700;
+}
+.dop_settings_body{
+    padding: 20px;
+}
+#file-list a.active:after{
+    content:" *";
+}

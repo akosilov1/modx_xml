@@ -24,12 +24,8 @@
             <h3>Импорт (Загрузка)</h3>
             <div>
                 <form action="{{m_link}}" method="post" enctype="multipart/form-data">
-                    <label for="">Пропуск строк<input type="text" name="skipp" required value="{{skipp}}"/></label>
-                    <label for="">Родитель<input type="text" name="parent" required value="{{parent}}"/></label>
-                    <label for="">Шаблон<input type="text" name="template" value="{{template}}"/></label>
-                    <br>
                     <fieldset>
-                        <legend>Выбор файла для импорта</legend>
+                        <legend>Выбор файла для импорта:</legend>
                         <div id="file-list">
                         {{files}}
                         </div>
@@ -38,6 +34,16 @@
                         <button name="action" value="del_file">- Удалить файл -</button>
                     </fieldset>
                     <br>
+                    <fieldset>
+                        <legend>Настройки:</legend>
+                        <label for="">Пропуск строк<input type="text" name="skipp" required value="{{skipp}}"/></label>
+                        <label for="">Родитель<input type="text" name="parent" required value="{{parent}}"/></label>
+                        <label for="">Шаблон<input type="text" name="template" value="{{template}}"/></label><br>
+                        <label for="">*Обязательная колонка (Отчет начинается с нуля)<input type="number" name="index_col" value="{{index_col}}"/></label>
+                        <p>(* Строки с не заполненной колонкой пропускаются )</p>
+                    </fieldset>
+                    <br>
+                    
                     <button name="action" value="upload">Загрузить</button><br>
                     <hr>
                     <h3>Обновление</h3>

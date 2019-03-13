@@ -25,6 +25,7 @@ if($_REQUEST["action"] && $_SERVER["REQUEST_METHOD"] == "POST") {
         'file' => $_REQUEST['import-file'],
         'action_cols' => $_REQUEST['action_cols'],
         'set_cols' => $_REQUEST['set_cols'],
+        'index_col' => $_REQUEST['index_col'],
     );
     $ar_cols = $ar_settings["col"];
     $content_table = $modx->getFullTableName("site_content");
@@ -102,11 +103,12 @@ if($_REQUEST["action"] && $_SERVER["REQUEST_METHOD"] == "POST") {
                 $ar_rez = $import->run($ar_settings,$h_col, $h_row);
                 echo "Добавлено: " . $ar_rez["ok"] . "<br>";
                 echo "С ошибками: " . $ar_rez["bad"] . "<br>";
+                echo '<pre>'.$ar_rez["log"].'</pre>';
 
             } else {
                 echo "Не выбрана калонка \"pagetitle\" (Название ресурса)";
             }
-
+            save_settings($ar_settings);
             break;
         case 'add_file':
             	if($_FILES && $_FILES['file']['error'] == 0){
@@ -206,10 +208,31 @@ class import{
 
     function run($ar_settings, $h_col, $h_row){
         $ar_cols = $ar_settings['col'];
-        $ar_rez = ["ok" => 0, "bad" => 0];
+        $ar_rez = ["ok" => 0, "bad" => 0,'log'=>''];
         $skipp = $_REQUEST['skipp'];
+
+        if($ar_settings['index_col'])
+            $index_col = array_search($ar_settings['index_col'],$ar_settings['col']);
+        else
+            $index_col = false;
+
         for ($row = $skipp + 1; $row < $h_row; $row++) {
+            $ar_rez["log"] .= '#'.$row."\t>>\n";
             $row_data = [];
+            // обязательное поле
+            
+            if($index_col !== false){
+                $index_val = $this->sheet->getCellByColumnAndRow($index_col, $row)->getValue();
+                if(!$index_val){
+                    $ar_rez["log"] .= "*** Строка Пропущена ***\n";
+                    continue;
+                }else{
+                    $ar_rez["log"] .= "index col =".$index_val."\n";
+                }
+                
+            }
+            // /обязательное поле
+
             for ($col = 0; $col < $h_col; $col++) {
                 $row_data[$ar_cols[$col]] = $this->sheet->getCellByColumnAndRow($col, $row)->getValue();
             }
@@ -217,6 +240,7 @@ class import{
                 $row_data['parent'] = $ar_settings["parent"];
             if (!key_exists('template', $row_data))
                 $row_data['template'] = $ar_settings["template"];
+
             if(function_exists('before_import')) $row_data = call_user_func('before_import', $row_data);
             $this->api->create($row_data);
             $id = $this->api->save(false, true);

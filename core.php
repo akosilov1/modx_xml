@@ -15,6 +15,7 @@ $sheet = $xls->getActiveSheet();
 $h_row = $sheet->getHighestRow();
 $h_col = PHPExcel_Cell::columnIndexFromString($sheet->getHighestColumn());
 
+pre_print(functions::getId(array("pagetitle"=>"NEPAL")));
 if($_REQUEST["action"] && $_SERVER["REQUEST_METHOD"] == "POST") {
     $ar_settings = array(
         'col' => $_REQUEST['col_'],
@@ -197,6 +198,40 @@ function save_settings($ar_settings){
     fwrite($f, json_encode($ar_settings));
     fclose($f);
 }
+class functions{
+    static function getId(array $filter){
+        global $modx;
+        $table = $modx->getFullTableName('site_content');
+        $q = "SELECT id FROM ".$table;
+        $where = "";
+        $i=1;
+        foreach ($filter as $f_key=>$f_val){
+            $val = $modx->db->escape($f_val);
+            if($i > 1) $where .= " AND ";
+            switch(gettype($f_val)){
+                case "string":
+                    $where .= $f_key." LIKE '".$val."'";
+                    break;
+                case "integer":
+                case "double":
+                    $where .= $f_key." = ".$val;
+                    break;
+
+            }
+
+            $i++;
+        }
+        if($where){
+            $q .= " WHERE ".$where;
+        }
+        $db_rez = $modx->db->query($q);
+        if($modx->db->getRecordCount($db_rez) ==  0)
+            return null;
+
+        $row = $modx->db->getRow($db_rez);
+        return $row['id'];
+    }
+}
 class import{
     var $api,$modx,$sheet,$call_back;
     function __construct($sheet)
@@ -236,8 +271,19 @@ class import{
             for ($col = 0; $col < $h_col; $col++) {
                 $row_data[$ar_cols[$col]] = $this->sheet->getCellByColumnAndRow($col, $row)->getValue();
             }
-            if (!key_exists('parent', $row_data))
+            if (!key_exists('parent', $row_data)){
                 $row_data['parent'] = $ar_settings["parent"];
+            }
+            // если в ячейке `parent` строка
+            if((int)$row_data['parent'] == 0){
+                $row_data['parent'] = functions::getId(
+                    array(
+                        "parent"=>$ar_settings["parent"],
+                        "pagetitle"=>$row_data['parent']
+                    )
+                );
+            }
+            $ar_rez["log"] .="\tPARENT ".$row_data['parent']."\n";
             if (!key_exists('template', $row_data))
                 $row_data['template'] = $ar_settings["template"];
 

@@ -1,1 +1,1 @@
-{"col":["pagetitle","parent","desc","keyw"],"parent":1,"template":3,"skipp":1,"index":"pagetitle","file":"example2.xlsx","action_cols":["","","",""],"set_cols":["","","",""],"index_col":""}
+{"col":["pagetitle","","desc","keyw"],"parent":1,"template":3,"skipp":1,"index":"pagetitle","file":"example2.xls","action_cols":["","","",""],"set_cols":["","","",""],"index_col":""}

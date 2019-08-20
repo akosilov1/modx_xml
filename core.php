@@ -52,8 +52,17 @@ if($_REQUEST["action"] && $_SERVER["REQUEST_METHOD"] == "POST") {
                     $row_data[$ar_settings['col'][$col]] = $sheet->getCellByColumnAndRow($col, $row)->getValue();
                 }
                 if($ar_settings["index"] == 'pagetitle'){
-                    $d_id = $modx->getDocumentChildren($ar_settings["parent"], 1,0,"id","pagetitle='".addslashes($row_data["pagetitle"])."'");
-                    $d_id = $d_id[0]["id"];
+                    //$ar_child_ids = $modx->getChildIds($ar_settings["parent"]);
+                    //$d_id = $modx->getDocumentChildren($ar_settings["parent"], 1,0,"id","pagetitle='".addslashes($row_data["pagetitle"])."'");
+                    $d_id = functions::get_all_child($ar_settings["parent"], $row_data["pagetitle"]);
+                    echo 'REZ'.print_r($d_id,true);
+                    $d_id = $d_id['id'];
+                        /*if(!$d_id){
+                            foreach ($ar_child_ids as $ch){
+                                $d_id = $modx->getDocumentChildren($ch, 1,0,"id","pagetitle='".addslashes($row_data["pagetitle"])."'");
+                            }
+                        }*/
+                    //$d_id = $d_id[0]["id"];
                 }else{
                     $q = "SELECT
                         c.id
@@ -230,6 +239,21 @@ class functions{
 
         $row = $modx->db->getRow($db_rez);
         return $row['id'];
+    }
+    static function get_all_child($parent, $name, $lavel = 1){
+        global $modx;
+        $d_id = $modx->getDocumentChildren($parent, 1,0,"id","pagetitle='".addslashes($name)."'");
+        if(!$d_id){
+            $ar_child_ids = $modx->getChildIds($parent);
+            foreach ($ar_child_ids as $ch){
+                $rrr = self::get_all_child($ch,$name, $lavel + 1);
+                if($rrr){
+                    return $rrr;
+                }
+            }
+        }
+        //$d_id[0]['LAVEL'] = $lavel;
+        return $d_id[0];
     }
 }
 class import{
